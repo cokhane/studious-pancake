@@ -1,18 +1,17 @@
+from os import remove
 
 
 class Solution:
     def find_i_pair(self, index, value, pair):
-        # print("pair: ", pair)
-        # print("index: ", index)
-        # print("value: ", value)
+        print("pair: ", pair)
+        print("index: ", index)
+        print("value: ", value)
         # O(n)
         # return any(d.get("value") == value and d.get("index") == index for d in pair)
         #O(1)
-        lookup = {(d.get("value"), d.get("index")) for d in pair if "value" in d and "index" in d}
-        # print('lookup: ',lookup)
+        lookup = {(d.get("value"), d.get("index")) for d in pair if "value" in d and "index" in d and d.get("remove") != True}
+        print('lookup: ',lookup)
         return (value, index) in lookup  # True/False
-
-
 
 
     def isValid(self, s: str) -> str:
@@ -27,17 +26,14 @@ class Solution:
         done_pair = []
 
         find_pair = []
-        skip_now = False
         i = 0
         j = 0
-        outer_loop = True
 
         removed = [False] * len(char_list)
 
         if len(s) == 1:
+            print('here')
             return False
-
-
 
         while i < len(char_list):
             if removed[i]:
@@ -46,57 +42,40 @@ class Solution:
 
                 continue
             if len(find_pair) == len(char_list):
+                print('here')
                 return False
 
             while j < len(char_list):
-                # print('---------------------------------')
-                # print('Start inner loop')
-                # print('J: ',char_list[j])
+
                 if removed[j]:
-                    # print(f'removed[i]: {removed}')
                     j += 1
                     continue
 
-
-
                 if self.find_i_pair(j,char_list[j], find_pair):
-                    # print('---------------------------------')
-                    # print('Inside skip condition found in find_pair')
-                    # print(f'Skipping this index: {j} with value: {char_list[j]}')
+                    print(f"skipping: {j},{char_list[j]} ")
                     j = j + 1
                     continue
 
-                # #
-                # if starting_list.find(char_list[j]) > -1:
                 if char_list[j] in starting_list_set:
-                    # print('---------------------------------')
-                    # print('Inside pair condition')
-                    new_dict = { "index": j, "value": char_list[j]}
+
+                    new_dict = { "index": j, "value": char_list[j], "remove": False}
                     find_pair.append(new_dict)
                     break
 
                 if len(find_pair) > 0:
-                    # print('---------------------------------')
-                    # print('Inside find tail condition')
-                    find_pair_last_element = find_pair[-1]["value"]
-                    find_pair_last_element_index = find_pair[-1]["index"]
-
+                    filterd_find_pair = [d for d in find_pair if not d.get('remove', False)]
+                    find_pair_last_element = filterd_find_pair[-1]["value"]
+                    find_pair_last_element_index = filterd_find_pair[-1]["index"]
                     find_tail_list = tail_list[int(starting_list.index(find_pair_last_element))]
 
                     if find_tail_list == char_list[j]:
-
-                        new_dict = {"index": find_pair_last_element_index, "value": find_pair_last_element}
-                        done_pair.append(new_dict)
-                        new_dict_tail = {"index": j, "value": char_list[j]}
-                        done_pair.append(new_dict_tail)
-
-                        removed[done_pair[0]["index"]] = True
-                        removed[done_pair[1]["index"]] = True
+                        filterd_find_pair[-1]["remove"] = True
+                        removed[find_pair_last_element_index] = True
+                        removed[j] = True
 
 
-                        done_pair = []
-                        find_pair.pop()
 
+                        # find_pair.pop()
 
                         j = 0
                         break
@@ -104,13 +83,14 @@ class Solution:
                         return False
 
                 if char_list[j] in tail_list_set:
+                    print('here')
                     return False
 
                 j += 1
             i += 1
 
-        # print('the last')
         if False in removed:
+            print('here')
             return False
         else:
             return True
@@ -142,7 +122,7 @@ axe = Solution()
 
 
 
-print('----------FINAL OUTPUT: ',axe.isValid("[([([([([()])])])])]"))
+print('----------FINAL OUTPUT: ',axe.isValid("[()]"))
 
 
 # print('----------FINAL OUTPUT: ',axe.isValid("[([([([([([([([([([()])])])])])])])])])]"))
