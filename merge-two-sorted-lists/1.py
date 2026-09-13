@@ -2,6 +2,8 @@
 
 start: 020426
 
+start again: 081826
+
 '''
 
 from typing import Optional
@@ -34,12 +36,11 @@ class Solution:
         return True
 
     @staticmethod
-    def merge_sort(list1, list2):
-
+    def merge_sort_repeating_zero(list1, list2):
+        print('merge_sort!!!: ')
         new_list = list1 + list2
         i = 0
         restart = 0
-        print(new_list)
         ''' merge sort '''
         while i < len(new_list):
             if i + 1 < len(new_list):
@@ -49,18 +50,23 @@ class Solution:
                     new_list[i],new_list[i+1] = new_list[i+1], new_list[i]
                     print(f"latest: ",new_list)
                     i = 0
-            # if new_list[i] == new_list[-1] and restart != 2:
-            #     print('restart loop!!!')
-            #     restart+=1
             i+=1
-
         print(new_list)
-
         return True
 
 
-axe = Solution()
+    @staticmethod
+    def merge_sort_no_repeating(list1, list2):
+        print('merge_sort!!!: ')
+        new_list = list1 + list2
 
+        for i in new_list:
+            print('-----')
+            for j in new_list:
+                print('print i: ',i)
+                print(j)
+
+axe = Solution()
 node1 = ListNode(1)
 node2 = ListNode(1)
 node3 = ListNode(2)
@@ -74,4 +80,4 @@ head2 = node4
 
 if __name__ == '__main__':
     # print(axe.mergeTwoLists(head1,head2))
-    print(axe.merge_sort([1,4,3],[6,5,2]))
+    print(axe.merge_sort_no_repeating([1,4,3],[6,5,2]))
